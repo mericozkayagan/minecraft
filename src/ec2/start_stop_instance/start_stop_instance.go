@@ -40,16 +40,13 @@ var (
 	command string
 )
 
-func init() {
-	fmt.Println("Please enter a command (start/stop): ")
-	fmt.Scanln(&command)
-
-}
-
 // Usage:
 // go run main.go <state> <instance id>
 //   - state can either be START or STOP
 func StartStopInstance() {
+    fmt.Println("Please enter a command (start/stop): ")
+	fmt.Scanln(&command)
+
 	// Load session from shared config
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
@@ -67,7 +64,7 @@ func StartStopInstance() {
 
 	//look for a instance which has tag Name=minecraft and get its instance id
 	var instanceId string
-    
+
 	for _, reservation := range result.Reservations {
 		for _, instance := range reservation.Instances {
 			for _, tag := range instance.Tags {

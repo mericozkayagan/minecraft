@@ -37,6 +37,13 @@ func DestroyInstance(region string) {
 		}
 	}
 
+    _, err = svc.DisassociateAddress(&ec2.DisassociateAddressInput{
+		AssociationId: (describeResult.Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicIp),
+    })
+    if err != nil {
+        fmt.Printf("Unable to allocate IP address, %v", err)
+    }
+
 	deleteResult, err := svc.TerminateInstances(&ec2.TerminateInstancesInput{
 		// An Amazon Linux AMI ID for t2.micro instances in the us-west-2 region
 		InstanceIds: aws.StringSlice([]string{instanceId}),

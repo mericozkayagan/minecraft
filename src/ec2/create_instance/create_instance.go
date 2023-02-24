@@ -13,14 +13,11 @@ var (
 	instanceType    string
 )
 
-func init() {
+
+func CreateInstance(region string) {
     fmt.Println("Please enter the region you want to create your server: ")
 	fmt.Scanln(&instanceType)
 
-}
-
-
-func CreateInstance(region string) {
     sess, err := session.NewSession(&aws.Config{
         Region: aws.String(region)},
     )

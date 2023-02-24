@@ -17,11 +17,10 @@ var destroyCmd = &cobra.Command{
 	Long: `Destroy the instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("destroy called")
+		destroy_instance.DestroyInstance(rootCmd.Flag("region").Value.String())
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(destroyCmd)
-
-	destroy_instance.DestroyInstance(rootCmd.Flag("region").Value.String())
 }

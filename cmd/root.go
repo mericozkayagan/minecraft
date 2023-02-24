@@ -41,16 +41,9 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// Add my subcommand palette
-	// rootCmd.AddCommand(newrepo.NewrepoCmd)
-	// rootCmd.AddCommand(deploy.DeployCmd)
-	// rootCmd.AddCommand(commitpr.CommitPrCmd)
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.minecraft.yaml)")
-	rootCmd.PersistentFlags().String("region", "", "Region to use for AWS API calls")
-
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
+	rootCmd.PersistentFlags().String("region", "eu-west-1", "Region to use for AWS API calls")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 

@@ -14,14 +14,14 @@ import (
 var rebootCmd = &cobra.Command{
 	Use:   "reboot",
 	Short: "Reboot the instance",
-	Long: `Reboot the instance`,
+	Long:  `Reboot the instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("reboot called")
+
+		reboot_instance.RebootInstance()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(rebootCmd)
-
-	reboot_instance.RebootInstance()
 }

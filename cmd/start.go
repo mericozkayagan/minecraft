@@ -17,11 +17,11 @@ var startCmd = &cobra.Command{
 	Long: `Start the instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("start called")
+		
+		start_stop_instance.StartStopInstance()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(startCmd)
-
-	start_stop_instance.StartStopInstance()
 }
