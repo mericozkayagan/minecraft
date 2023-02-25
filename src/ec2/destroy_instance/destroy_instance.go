@@ -24,7 +24,6 @@ func DestroyInstance(instanceId *string) {
 	}
 
 	deleteResult, err := svc.TerminateInstances(&ec2.TerminateInstancesInput{
-		// An Amazon Linux AMI ID for t2.micro instances in the us-west-2 region
 		InstanceIds: aws.StringSlice([]string{*instanceId}),
 	})
 
@@ -33,6 +32,6 @@ func DestroyInstance(instanceId *string) {
 		return
 	}
 
-	fmt.Println("Deleting instance", *deleteResult.TerminatingInstances[0].InstanceId)
+	fmt.Println("Deleting instance: ", *deleteResult.TerminatingInstances[0].InstanceId)
 
 }

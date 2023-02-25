@@ -10,16 +10,24 @@ import (
 
 var cfgFile string
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "minecraft",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "A cli tool for launching a Minecraft server",
+	Long: `This cli launchs an EC2 instance with the security group
+and has the commands to manage it. It reads the credentials from .aws/credentials.
+The commands are:
+* minecraft install
+	This command creates a security group with necessary ports and launchs the instance.
+	Inputs:
+		Instance type >> t2.medium, t3.small etc
+* minecraft destroy
+	This commands destroys the instance and the related resources
+* minecraft reboot
+	Reboots the instance if anything goes wrong
+minecraft start
+	Starts the instance
+minecraft stop
+	Stops the instance`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

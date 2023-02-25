@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -11,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rebootCmd represents the reboot command
 var rebootCmd = &cobra.Command{
 	Use:   "reboot",
 	Short: "Reboot the instance",

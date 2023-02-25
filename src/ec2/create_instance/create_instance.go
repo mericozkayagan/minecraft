@@ -26,9 +26,7 @@ func CreateInstance() {
 
 	securityGroupId := createSecurityGroup()
 
-	// Specify the details of the instance that you want to create.
 	runResult, err := svc.RunInstances(&ec2.RunInstancesInput{
-		// An Amazon Linux AMI ID for t2.micro instances in the us-west-2 region
 		ImageId:          aws.String("ami-04f70e24ce4712a3c"),
 		InstanceType:     aws.String(instanceType),
 		MinCount:         aws.Int64(1),
@@ -58,5 +56,5 @@ func CreateInstance() {
 		return
 	}
 
-	fmt.Println("Successfully tagged instance")
+	fmt.Println("Your ip to connect is: ", *runResult.Instances[0].PublicIpAddress )
 }

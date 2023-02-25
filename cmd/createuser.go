@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -12,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createuserCmd represents the createuser command
 var createuserCmd = &cobra.Command{
 	Use:   "createuser",
 	Short: "Create a new user",
