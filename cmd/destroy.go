@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/mericozkayagan/minecraft/src/ec2/destroy_instance"
+	"github.com/mericozkayagan/minecraft/src/ec2/filter_by_tag"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,8 @@ var destroyCmd = &cobra.Command{
 	Long: `Destroy the instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("destroy called")
-		destroy_instance.DestroyInstance(rootCmd.Flag("region").Value.String())
+		instanceId :=filter_by_tag.FilterByTag()
+		destroy_instance.DestroyInstance(instanceId)
 	},
 }
 

@@ -39,39 +39,18 @@ import (
 // address will be associated with the instance ID passed in.
 //
 
-func AssociateEIP(region string) {
+func AssociateEIP(instanceId string) {
 
     // Initialize a session in us-west-2 that the SDK will use to load
     // credentials from the shared credentials file ~/.aws/credentials.
-    sess, err := session.NewSession(&aws.Config{
-        Region: aws.String(region)},
-    )
+    sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 
     // Create an EC2 service client.
     svc := ec2.New(sess)
 
-	result, err := svc.DescribeInstances(nil)
-	if err != nil {
-		fmt.Println("Error", err)
-	} else {
-		fmt.Println("Success", result)
-	}
-
-	//look for a instance which has tag Name=minecraft and get its instance id
-	var instanceId string
-
-	for _, reservation := range result.Reservations {
-		for _, instance := range reservation.Instances {
-			for _, tag := range instance.Tags {
-				if *tag.Key == "Name" && *tag.Value == "Minecraft" {
-					instanceId = *instance.InstanceId
-					break
-				}
-			}
-		}
-	}
-
-    // Attempt to allocate the Elastic IP address.
+	    // Attempt to allocate the Elastic IP address.
     allocRes, err := svc.AllocateAddress(&ec2.AllocateAddressInput{
         Domain: aws.String("vpc"),
     })

@@ -49,12 +49,12 @@ type StatementEntry struct {
 
 // Usage:
 // go run iam_createpolicy.go
-func CreatePolicy(region string) {
+func CreatePolicy() {
 	// Initialize a session in us-west-2 that the SDK will use to load
 	// credentials from the shared credentials file ~/.aws/credentials.
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(region)},
-	)
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+        SharedConfigState: session.SharedConfigEnable,
+    }))
 
 	// Create a IAM service client.
 	svc := iam.New(sess)

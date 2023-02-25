@@ -36,22 +36,11 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-var (
-	command string
-)
-
-// Usage:
-// go run main.go <state> <instance id>
-//   - state can either be START or STOP
-func StartStopInstance() {
-    fmt.Println("Please enter a command (start/stop): ")
-	fmt.Scanln(&command)
-
+func StartStopInstance(command string, instanceId *string) {
 	// Load session from shared config
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
-
+        SharedConfigState: session.SharedConfigEnable,
+    }))
 	// Create new EC2 client
 	svc := ec2.New(sess)
 
@@ -62,27 +51,13 @@ func StartStopInstance() {
 		fmt.Println("Success", result)
 	}
 
-	//look for a instance which has tag Name=minecraft and get its instance id
-	var instanceId string
-
-	for _, reservation := range result.Reservations {
-		for _, instance := range reservation.Instances {
-			for _, tag := range instance.Tags {
-				if *tag.Key == "Name" && *tag.Value == "Minecraft" {
-					instanceId = *instance.InstanceId
-					break
-				}
-			}
-		}
-	}
-
 	// Turn monitoring on
 	if strings.TrimSpace(strings.ToLower(command)) == "start" {
 		// We set DryRun to true to check to see if the instance exists and we have the
 		// necessary permissions to monitor the instance.
 		input := &ec2.StartInstancesInput{
 			InstanceIds: []*string{
-				aws.String(instanceId),
+				aws.String(*instanceId),
 			},
 			DryRun: aws.Bool(true),
 		}
@@ -106,7 +81,7 @@ func StartStopInstance() {
 	} else if strings.TrimSpace(strings.ToLower(command)) == "stop" { // Turn instances off
 		input := &ec2.StopInstancesInput{
 			InstanceIds: []*string{
-				aws.String(instanceId),
+				aws.String(*instanceId),
 			},
 			DryRun: aws.Bool(true),
 		}

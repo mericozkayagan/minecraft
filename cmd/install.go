@@ -6,9 +6,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/mericozkayagan/minecraft/src/ec2/assoicate_eip"
 	"github.com/mericozkayagan/minecraft/src/ec2/create_instance"
 	"github.com/spf13/cobra"
+	// "github.com/mericozkayagan/minecraft/src/ec2/filter_by_tag"
+	// "github.com/mericozkayagan/minecraft/src/ec2/assoicate_eip"
 )
 
 // installCmd represents the init command
@@ -19,8 +20,10 @@ var installCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
 
-		create_instance.CreateInstance(rootCmd.Flag("region").Value.String())
-		assoicate_eip.AssociateEIP(rootCmd.Flag("region").Value.String())
+		create_instance.CreateInstance()
+
+		// instanceId :=filter_by_tag.FilterByTag()
+		// assoicate_eip.AssociateEIP(instanceId)
 	},
 }
 

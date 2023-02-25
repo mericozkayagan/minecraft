@@ -20,9 +20,9 @@ var createuserCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("createuser called")
 
-		create_user.CreateUser(rootCmd.Flag("region").Value.String())
-		create_policy.CreatePolicy(rootCmd.Flag("region").Value.String())
-		attach_policy.AttachPolicy(rootCmd.Flag("region").Value.String())
+		create_user.CreateUser()
+		create_policy.CreatePolicy()
+		attach_policy.AttachPolicy()
 	},
 }
 

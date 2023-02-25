@@ -8,12 +8,12 @@ import (
     "github.com/aws/aws-sdk-go/service/iam"
 )
 
-func AttachPolicy(region string) {
+func AttachPolicy() {
     // Initialize a session in us-west-2 that the SDK will use to load
     // credentials from the shared credentials file ~/.aws/credentials.
-    sess, err := session.NewSession(&aws.Config{
-        Region: aws.String(region)},
-    )
+    sess := session.Must(session.NewSessionWithOptions(session.Options{
+        SharedConfigState: session.SharedConfigEnable,
+    }))
 
     // Create a IAM service client.
     svc := iam.New(sess)
@@ -25,7 +25,7 @@ func AttachPolicy(region string) {
     // Paginate through all role policies. If our role exists on any role
     // policy we will set the pageErr and return false. Stopping the
     // pagination.
-    err = svc.ListAttachedRolePoliciesPages(
+    err := svc.ListAttachedRolePoliciesPages(
         &iam.ListAttachedRolePoliciesInput{
             RoleName: aws.String("minecraftRole"),
         },

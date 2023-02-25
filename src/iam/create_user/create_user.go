@@ -9,17 +9,15 @@ import (
     "github.com/aws/aws-sdk-go/service/iam"
 )
 
-func CreateUser(region string) {
-    // Initialize a session in us-west-2 that the SDK will use to load
-    // credentials from the shared credentials file ~/.aws/credentials.
-    sess, err := session.NewSession(&aws.Config{
-        Region: aws.String(region)},
-    )
+func CreateUser() {
+    sess := session.Must(session.NewSessionWithOptions(session.Options{
+        SharedConfigState: session.SharedConfigEnable,
+    }))
 
     // Create a IAM service client.
     svc := iam.New(sess)
 
-    _, err = svc.GetUser(&iam.GetUserInput{
+    _, err := svc.GetUser(&iam.GetUserInput{
         UserName: aws.String("minecraftRole"),
     })
 

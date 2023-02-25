@@ -39,19 +39,19 @@ import (
 // address will be associated with the instance ID passed in.
 //
 
-func DestroyEIP(region string, eip string) {
+func DestroyEIP(eip string) {
 
     // Initialize a session in us-west-2 that the SDK will use to load
     // credentials from the shared credentials file ~/.aws/credentials.
-    sess, err := session.NewSession(&aws.Config{
-        Region: aws.String(region)},
-    )
+    sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 
     // Create an EC2 service client.
     svc := ec2.New(sess)
 
     // Attempt to allocate the Elastic IP address.
-    _, err = svc.DisassociateAddress(&ec2.DisassociateAddressInput{
+    _, err := svc.DisassociateAddress(&ec2.DisassociateAddressInput{
 		AssociationId: aws.String(eip),
     })
     if err != nil {

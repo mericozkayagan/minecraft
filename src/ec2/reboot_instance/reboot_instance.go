@@ -36,7 +36,7 @@ import (
 
 // Usage:
 // go run main.go <instance id>
-func RebootInstance() {
+func RebootInstance(instanceId *string) {
     // Load session from shared config
     sess := session.Must(session.NewSessionWithOptions(session.Options{
         SharedConfigState: session.SharedConfigEnable,
@@ -45,33 +45,11 @@ func RebootInstance() {
     // Create new EC2 client
     svc := ec2.New(sess)
 
-	//look for a instance which has tag Name=minecraft and get its instance id
-	describeResult, err := svc.DescribeInstances(nil)
-	if err != nil {
-		fmt.Println("Error", err)
-	} else {
-		fmt.Println("Success", describeResult)
-	}
-
-	//look for a instance which has tag Name=minecraft and get its instance id
-	var instanceId string
-
-	for _, reservation := range describeResult.Reservations {
-		for _, instance := range reservation.Instances {
-			for _, tag := range instance.Tags {
-				if *tag.Key == "Name" && *tag.Value == "Minecraft" {
-					instanceId = *instance.InstanceId
-					break
-				}
-			}
-		}
-	}
-
 	// We set DryRun to true to check to see if the instance exists and we have the
     // necessary permissions to monitor the instance.
     input := &ec2.RebootInstancesInput{
         InstanceIds: []*string{
-            aws.String(instanceId),
+            aws.String(*instanceId),
         },
         DryRun: aws.Bool(true),
     }

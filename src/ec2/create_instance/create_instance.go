@@ -1,60 +1,62 @@
 package create_instance
 
 import (
-    "github.com/aws/aws-sdk-go/aws"
-    "github.com/aws/aws-sdk-go/aws/session"
-    "github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ec2"
 
-    "fmt"
-    "log"
+	"fmt"
+	"log"
 )
 
 var (
-	instanceType    string
+	instanceType string
 )
 
-
-func CreateInstance(region string) {
-    fmt.Println("Please enter the region you want to create your server: ")
+func CreateInstance() {
+	fmt.Println("Please enter the instance type: ")
 	fmt.Scanln(&instanceType)
 
-    sess, err := session.NewSession(&aws.Config{
-        Region: aws.String(region)},
-    )
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 
-    // Create EC2 service client
-    svc := ec2.New(sess)
+	// Create EC2 service client
+	svc := ec2.New(sess)
 
-    // Specify the details of the instance that you want to create.
-    runResult, err := svc.RunInstances(&ec2.RunInstancesInput{
-        // An Amazon Linux AMI ID for t2.micro instances in the us-west-2 region
-        ImageId:      aws.String("ami-e7527ed7"),
-        InstanceType: aws.String(instanceType),
-        MinCount:     aws.Int64(1),
-        MaxCount:     aws.Int64(1),
-    })
+	securityGroupId := createSecurityGroup()
 
-    if err != nil {
-        fmt.Println("Could not create instance", err)
-        return
-    }
+	// Specify the details of the instance that you want to create.
+	runResult, err := svc.RunInstances(&ec2.RunInstancesInput{
+		// An Amazon Linux AMI ID for t2.micro instances in the us-west-2 region
+		ImageId:          aws.String("ami-04f70e24ce4712a3c"),
+		InstanceType:     aws.String(instanceType),
+		MinCount:         aws.Int64(1),
+		MaxCount:         aws.Int64(1),
+		SecurityGroupIds: aws.StringSlice([]string{*securityGroupId}),
+	})
 
-    fmt.Println("Created instance", *runResult.Instances[0].InstanceId)
+	if err != nil {
+		fmt.Println("Could not create instance", err)
+		return
+	}
 
-    // Add tags to the created instance
-    _, errtag := svc.CreateTags(&ec2.CreateTagsInput{
-        Resources: []*string{runResult.Instances[0].InstanceId},
-        Tags: []*ec2.Tag{
-            {
-                Key:   aws.String("Name"),
-                Value: aws.String("Minecraft"),
-            },
-        },
-    })
-    if errtag != nil {
-        log.Println("Could not create tags for instance", runResult.Instances[0].InstanceId, errtag)
-        return
-    }
+	fmt.Println("Created instance", *runResult.Instances[0].InstanceId)
 
-    fmt.Println("Successfully tagged instance")
+	// Add tags to the created instance
+	_, errtag := svc.CreateTags(&ec2.CreateTagsInput{
+		Resources: []*string{runResult.Instances[0].InstanceId},
+		Tags: []*ec2.Tag{
+			{
+				Key:   aws.String("Name"),
+				Value: aws.String("Minecraft"),
+			},
+		},
+	})
+	if errtag != nil {
+		log.Println("Could not create tags for instance", runResult.Instances[0].InstanceId, errtag)
+		return
+	}
+
+	fmt.Println("Successfully tagged instance")
 }
