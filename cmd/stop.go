@@ -16,8 +16,8 @@ var stopCmd = &cobra.Command{
 		fmt.Println("stop called")
 
 		fmt.Println()
-		instanceId := filter_by_tag.FilterByTag()
-		start_stop_instance.StartStopInstance("stop", instanceId)
+		instanceId, publicIp := filter_by_tag.FilterByTag()
+		start_stop_instance.StartStopInstance("stop", instanceId, publicIp)
 	},
 }
 

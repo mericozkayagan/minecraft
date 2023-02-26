@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func FilterByTag() (instanceId *string) {
+func FilterByTag() (instanceId, publicIp *string) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
@@ -33,5 +33,5 @@ func FilterByTag() (instanceId *string) {
 		log.Fatal(err.Error())
 	}
 
-	return resp.Reservations[0].Instances[0].InstanceId
+	return resp.Reservations[0].Instances[0].InstanceId, resp.Reservations[0].Instances[0].PublicIpAddress
 }

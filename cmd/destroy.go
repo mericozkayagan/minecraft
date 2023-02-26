@@ -11,10 +11,10 @@ import (
 var destroyCmd = &cobra.Command{
 	Use:   "destroy",
 	Short: "Destroy the instance",
-	Long: `Destroy the instance`,
+	Long:  `Destroy the instance`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("destroy called")
-		instanceId :=filter_by_tag.FilterByTag()
+		instanceId, _ := filter_by_tag.FilterByTag()
 		destroy_instance.DestroyInstance(instanceId)
 	},
 }

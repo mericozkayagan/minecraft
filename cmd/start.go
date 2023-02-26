@@ -15,8 +15,8 @@ var startCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("start called")
 
-		instanceId := filter_by_tag.FilterByTag()
-		start_stop_instance.StartStopInstance("start", instanceId)
+		instanceId, publicIp := filter_by_tag.FilterByTag()
+		start_stop_instance.StartStopInstance("start", instanceId, publicIp)
 	},
 }
 

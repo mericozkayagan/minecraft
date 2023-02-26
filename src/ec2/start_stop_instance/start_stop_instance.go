@@ -10,10 +10,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func StartStopInstance(command string, instanceId *string) {
+func StartStopInstance(command string, instanceId, publicIp *string) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
-        SharedConfigState: session.SharedConfigEnable,
-    }))
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 	// Create new EC2 client
 	svc := ec2.New(sess)
 
@@ -34,7 +34,7 @@ func StartStopInstance(command string, instanceId *string) {
 			},
 			DryRun: aws.Bool(true),
 		}
-		result, err := svc.StartInstances(input)
+		_, err := svc.StartInstances(input)
 		awsErr, ok := err.(awserr.Error)
 
 		// If the error code is `DryRunOperation` it means we have the necessary
@@ -42,11 +42,11 @@ func StartStopInstance(command string, instanceId *string) {
 		if ok && awsErr.Code() == "DryRunOperation" {
 			// Let's now set dry run to be false. This will allow us to start the instances
 			input.DryRun = aws.Bool(false)
-			result, err = svc.StartInstances(input)
+			_, err = svc.StartInstances(input)
 			if err != nil {
 				fmt.Println("Error", err)
 			} else {
-				fmt.Println("Successfully started the instance: ", result.StartingInstances[0].InstanceId)
+				fmt.Println("Successfully started the instance with the IP: ", publicIp)
 			}
 		} else { // This could be due to a lack of permissions
 			fmt.Println("Error", err)
@@ -58,15 +58,15 @@ func StartStopInstance(command string, instanceId *string) {
 			},
 			DryRun: aws.Bool(true),
 		}
-		result, err := svc.StopInstances(input)
+		_, err := svc.StopInstances(input)
 		awsErr, ok := err.(awserr.Error)
 		if ok && awsErr.Code() == "DryRunOperation" {
 			input.DryRun = aws.Bool(false)
-			result, err = svc.StopInstances(input)
+			_, err = svc.StopInstances(input)
 			if err != nil {
 				fmt.Println("Error", err)
 			} else {
-				fmt.Println("Successfully stopped the instance: ", result.StoppingInstances[0].InstanceId)
+				fmt.Println("Successfully stopped the instance with the IP: ", publicIp)
 			}
 		} else {
 			fmt.Println("Error", err)

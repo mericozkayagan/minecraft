@@ -15,8 +15,8 @@ var rebootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("reboot called")
 
-		instanceId := filter_by_tag.FilterByTag()
-		reboot_instance.RebootInstance(instanceId)
+		instanceId, publicIp := filter_by_tag.FilterByTag()
+		reboot_instance.RebootInstance(instanceId, publicIp)
 	},
 }
 
