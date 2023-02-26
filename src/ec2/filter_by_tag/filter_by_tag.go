@@ -10,13 +10,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func FilterByTag() (instanceId, publicIp *string) {
+func FilterByTag() (instanceId *string, publicIp *ec2.InstanceNetworkInterfaceAssociation) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
 
 	svc := ec2.New(sess)
-	fmt.Printf("listing instances with the tag: Minecraft")
+	fmt.Println("listing instances with the tag: Minecraft")
 	params := &ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
 			{
@@ -33,5 +33,5 @@ func FilterByTag() (instanceId, publicIp *string) {
 		log.Fatal(err.Error())
 	}
 
-	return resp.Reservations[0].Instances[0].InstanceId, resp.Reservations[0].Instances[0].PublicIpAddress
+	return resp.Reservations[0].Instances[0].InstanceId, resp.Reservations[0].Instances[0].NetworkInterfaces[0].Association
 }

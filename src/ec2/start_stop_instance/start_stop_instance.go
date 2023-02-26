@@ -8,21 +8,17 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/mericozkayagan/minecraft/src/ec2/filter_by_tag"
 )
 
-func StartStopInstance(command string, instanceId, publicIp *string) {
+func StartStopInstance(command string) {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
 	// Create new EC2 client
 	svc := ec2.New(sess)
 
-	result, err := svc.DescribeInstances(nil)
-	if err != nil {
-		fmt.Println("Error", err)
-	} else {
-		fmt.Println("Success", result)
-	}
+	instanceId, _ := filter_by_tag.FilterByTag()
 
 	// Turn monitoring on
 	if strings.TrimSpace(strings.ToLower(command)) == "start" {
@@ -46,7 +42,8 @@ func StartStopInstance(command string, instanceId, publicIp *string) {
 			if err != nil {
 				fmt.Println("Error", err)
 			} else {
-				fmt.Println("Successfully started the instance with the IP: ", publicIp)
+				_, publicIp := filter_by_tag.FilterByTag()
+				fmt.Println("Successfully started the instance with the config: ", publicIp)
 			}
 		} else { // This could be due to a lack of permissions
 			fmt.Println("Error", err)
@@ -66,7 +63,7 @@ func StartStopInstance(command string, instanceId, publicIp *string) {
 			if err != nil {
 				fmt.Println("Error", err)
 			} else {
-				fmt.Println("Successfully stopped the instance with the IP: ", publicIp)
+				fmt.Println("Successfully stopped the instance.")
 			}
 		} else {
 			fmt.Println("Error", err)

@@ -7,15 +7,18 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/mericozkayagan/minecraft/src/ec2/filter_by_tag"
 )
 
-func RebootInstance(instanceId, publicIp *string) {
+func RebootInstance() {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
 
 	// Create new EC2 client
 	svc := ec2.New(sess)
+
+	instanceId, _ := filter_by_tag.FilterByTag()
 
 	// We set DryRun to true to check to see if the instance exists and we have the
 	// necessary permissions to monitor the instance.
@@ -37,7 +40,8 @@ func RebootInstance(instanceId, publicIp *string) {
 		if err != nil {
 			fmt.Println("Error", err)
 		} else {
-			fmt.Println("Successfully rebooted the instance with the IP: ", publicIp)
+			_, publicIp := filter_by_tag.FilterByTag()
+			fmt.Println("Successfully started the instance with the IP: ", publicIp)
 		}
 	} else { // This could be due to a lack of permissions
 		fmt.Println("Error", err)
